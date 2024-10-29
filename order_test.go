@@ -3,8 +3,9 @@ package order_test
 
 import (
 	"errors"
-	"order"
 	"testing"
+
+	"github.com/yacobolo/order"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
