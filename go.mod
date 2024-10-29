@@ -1,4 +1,4 @@
-module order
+module github.com/yacobolo/order
 
 go 1.23.1
 
