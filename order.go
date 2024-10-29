@@ -1,4 +1,4 @@
-package orderedcollection
+package order
 
 import (
 	"errors"
@@ -17,23 +17,23 @@ var (
 	ErrInvalidPosition = errors.New("invalid position")
 )
 
-// OrderingService provides methods to manage the order of items.
-type OrderingService[T Orderable] struct{}
+// OrderManager provides methods to manage the order of items.
+type OrderManager[T Orderable] struct{}
 
-// NewOrderingService creates a new instance of OrderingService.
-func NewOrderingService[T Orderable]() *OrderingService[T] {
-	return &OrderingService[T]{}
+// NewOrderManager creates a new instance of OrderManager.
+func NewOrderManager[T Orderable]() *OrderManager[T] {
+	return &OrderManager[T]{}
 }
 
 // NormalizePositions ensures that the positions of items are sequential starting from 1.
-func (os *OrderingService[T]) NormalizePositions(items []T) {
+func (os *OrderManager[T]) NormalizePositions(items []T) {
 	for i, item := range items {
 		item.SetPosition(i + 1)
 	}
 }
 
 // GetItemIndexByID returns the index of an item by its ID.
-func (os *OrderingService[T]) GetItemIndexByID(items []T, itemID string) (int, error) {
+func (os *OrderManager[T]) GetItemIndexByID(items []T, itemID string) (int, error) {
 	for index, item := range items {
 		if item.GetID() == itemID {
 			return index, nil
@@ -43,7 +43,7 @@ func (os *OrderingService[T]) GetItemIndexByID(items []T, itemID string) (int, e
 }
 
 // Up moves an item up by one position.
-func (os *OrderingService[T]) Up(items []T, itemID string) error {
+func (os *OrderManager[T]) Up(items []T, itemID string) error {
 	index, err := os.GetItemIndexByID(items, itemID)
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func (os *OrderingService[T]) Up(items []T, itemID string) error {
 }
 
 // Down moves an item down by one position.
-func (os *OrderingService[T]) Down(items []T, itemID string) error {
+func (os *OrderManager[T]) Down(items []T, itemID string) error {
 	index, err := os.GetItemIndexByID(items, itemID)
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (os *OrderingService[T]) Down(items []T, itemID string) error {
 }
 
 // To moves an item to a specific position.
-func (os *OrderingService[T]) To(items []T, itemID string, newPosition int) error {
+func (os *OrderManager[T]) To(items []T, itemID string, newPosition int) error {
 	if newPosition < 1 || newPosition > len(items) {
 		return fmt.Errorf("To: %w", ErrInvalidPosition)
 	}
@@ -104,17 +104,17 @@ func (os *OrderingService[T]) To(items []T, itemID string, newPosition int) erro
 }
 
 // Top moves an item to the first position.
-func (os *OrderingService[T]) Top(items []T, itemID string) error {
+func (os *OrderManager[T]) Top(items []T, itemID string) error {
 	return os.To(items, itemID, 1)
 }
 
 // Bottom moves an item to the last position.
-func (os *OrderingService[T]) Bottom(items []T, itemID string) error {
+func (os *OrderManager[T]) Bottom(items []T, itemID string) error {
 	return os.To(items, itemID, len(items))
 }
 
 // Above moves an item to be directly above the target item.
-func (os *OrderingService[T]) Above(items []T, itemID string, targetID string) error {
+func (os *OrderManager[T]) Above(items []T, itemID string, targetID string) error {
 	targetIndex, err := os.GetItemIndexByID(items, targetID)
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func (os *OrderingService[T]) Above(items []T, itemID string, targetID string) e
 }
 
 // Below moves an item to be directly below the target item.
-func (os *OrderingService[T]) Below(items []T, itemID string, targetID string) error {
+func (os *OrderManager[T]) Below(items []T, itemID string, targetID string) error {
 	targetIndex, err := os.GetItemIndexByID(items, targetID)
 	if err != nil {
 		return err

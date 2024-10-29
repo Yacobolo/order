@@ -1,9 +1,9 @@
-// orderedcollection/orderedcollection_test.go
-package orderedcollection_test
+// order/order_test.go
+package order_test
 
 import (
 	"errors"
-	"orderedcollection"
+	"order"
 	"testing"
 
 	"github.com/google/uuid"
@@ -41,7 +41,7 @@ func createTestItems(n int) []*TestItem {
 }
 
 func TestUp(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(3)
 
 	itemID := items[1].GetID() // Middle item
@@ -54,7 +54,7 @@ func TestUp(t *testing.T) {
 }
 
 func TestDown(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(3)
 
 	itemID := items[1].GetID() // Middle item
@@ -67,7 +67,7 @@ func TestDown(t *testing.T) {
 }
 
 func TestTo(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(5)
 
 	itemID := items[0].GetID() // First item
@@ -80,7 +80,7 @@ func TestTo(t *testing.T) {
 }
 
 func TestTop(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(5)
 
 	itemID := items[3].GetID() // Item at position 4
@@ -93,7 +93,7 @@ func TestTop(t *testing.T) {
 }
 
 func TestBottom(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(5)
 
 	itemID := items[1].GetID() // Item at position 2
@@ -106,7 +106,7 @@ func TestBottom(t *testing.T) {
 }
 
 func TestAbove(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(5)
 
 	itemID := items[4].GetID()   // Last item
@@ -120,7 +120,7 @@ func TestAbove(t *testing.T) {
 }
 
 func TestBelow(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(5)
 
 	itemID := items[0].GetID()   // First item
@@ -134,7 +134,7 @@ func TestBelow(t *testing.T) {
 }
 
 func TestNormalizePositions(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(3)
 
 	// Manually alter positions
@@ -150,27 +150,27 @@ func TestNormalizePositions(t *testing.T) {
 }
 
 func TestGetItemIndexByID_NotFound(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(3)
 
 	nonExistentID := uuid.New().String()
 	index, err := os.GetItemIndexByID(items, nonExistentID)
 	assert.Error(t, err)
 	assert.Equal(t, -1, index)
-	assert.Equal(t, orderedcollection.ErrItemNotFound, errors.Unwrap(err))
+	assert.Equal(t, order.ErrItemNotFound, errors.Unwrap(err))
 }
 
 func TestInvalidPosition(t *testing.T) {
-	os := orderedcollection.NewOrderingService[*TestItem]()
+	os := order.NewOrderManager[*TestItem]()
 	items := createTestItems(3)
 
 	itemID := items[0].GetID()
 
 	err := os.To(items, itemID, 0)
 	assert.Error(t, err)
-	assert.Equal(t, orderedcollection.ErrInvalidPosition, errors.Unwrap(err))
+	assert.Equal(t, order.ErrInvalidPosition, errors.Unwrap(err))
 
 	err = os.To(items, itemID, 5)
 	assert.Error(t, err)
-	assert.Equal(t, orderedcollection.ErrInvalidPosition, errors.Unwrap(err))
+	assert.Equal(t, order.ErrInvalidPosition, errors.Unwrap(err))
 }

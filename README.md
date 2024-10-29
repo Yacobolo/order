@@ -1,5 +1,5 @@
 
-# orderedcollection
+# order
 
 A Go package that provides ordering functionalities for collections of items implementing the `Orderable` interface. Inspired by `django-ordered-model`, it allows you to easily move items up, down, to specific positions, above or below other items, and to the top or bottom of a collection.
 
@@ -16,7 +16,7 @@ A Go package that provides ordering functionalities for collections of items imp
 To install the package, run:
 
 ```bash
-go get github.com/yacobolo/orderedcollection
+go get github.com/yacobolo/order
 ```
 
 
@@ -25,7 +25,7 @@ go get github.com/yacobolo/orderedcollection
 First, import the package into your Go project:
 
 ```go
-import "github.com/yourusername/orderedcollection"
+import "github.com/yourusername/order"
 ```
 
 ### Implement the `Orderable` Interface
@@ -64,10 +64,10 @@ func (i *Item) SetPosition(position int) {
 
 ### Initialize the Ordering Service
 
-Create an instance of the `OrderingService`:
+Create an instance of the `OrderManager`:
 
 ```go
-os := orderedcollection.NewOrderingService[*Item]()
+os := order.NewOrderManager[*Item]()
 ```
 
 ### Examples
@@ -146,7 +146,7 @@ import (
     "fmt"
 
     "github.com/google/uuid"
-    "github.com/yourusername/orderedcollection"
+    "github.com/yourusername/order"
 )
 
 type Item struct {
@@ -169,7 +169,7 @@ func (i *Item) SetPosition(position int) {
 
 func main() {
     // Initialize the ordering service
-    os := orderedcollection.NewOrderingService[*Item]()
+    os := order.NewOrderManager[*Item]()
 
     // Create a slice of items
     items := []*Item{
@@ -221,9 +221,9 @@ Example of error handling:
 ```go
 err := os.To(items, itemID, newPosition)
 if err != nil {
-    if errors.Is(err, orderedcollection.ErrItemNotFound) {
+    if errors.Is(err, order.ErrItemNotFound) {
         // Handle item not found
-    } else if errors.Is(err, orderedcollection.ErrInvalidPosition) {
+    } else if errors.Is(err, order.ErrInvalidPosition) {
         // Handle invalid position
     } else {
         // Handle other errors
